@@ -10,9 +10,11 @@ fn main() {
     let mut rxs = HashMap::new();
 
     (0..10).for_each(|i| {
+        // will not be deadlocked since async channel has an infinite buffer
         // let (tx, rx) = mpsc::channel();
-        //failed at buffer size < 5
-        let (tx, rx) = mpsc::sync_channel::<i32>(5);
+
+        //deadlocked when buffer size < 5
+        let (tx, rx) = mpsc::sync_channel::<i32>(4);
         txs.push(tx);
         rxs.insert(i, rx);
     });
